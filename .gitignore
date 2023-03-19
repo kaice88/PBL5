@@ -1,4 +1,3 @@
- __pycache__/
-Train/
-Test/
+AlphaPose/
+__pycache__/
 .idea/
