@@ -1,10 +1,9 @@
-import matplotlib.pyplot as plt
+
 import json
 import csv
 import math
 import pandas as pd
 import os
-import numpy as np
 from sklearn.model_selection import train_test_split
 
 
@@ -27,6 +26,8 @@ def extract_keypoints(json_file_path, keypoints_file_path):
     # Open the JSON file
     with open(json_file_path) as f:
         data = json.load(f)
+    print(data)
+
 
     # Extract the keypoints array
     keypoints_list = []
@@ -48,9 +49,11 @@ def extract_keypoints(json_file_path, keypoints_file_path):
             keypoints_list.pop(-1)
             dis_list.append(d)
             keypoints_list.append(item['keypoints'])
+    print(keypoints_list)
     for x in keypoints_list:
         if checkvalid(x):
             keypoints_list2.append(x)
+    print(keypoints_list2)
     with open(keypoints_file_path, 'w', newline='') as f:
         writer = csv.writer(f)
         writer.writerows(keypoints_list2)
@@ -71,7 +74,8 @@ def angle_between_vectors(u, v, range_0_360=False):
 
 def extract_features(keypoints_file_path, features_file_path1):
     keypoints_list = pd.read_csv(
-        keypoints_file_path).iloc[:, :].values
+        keypoints_file_path,header=None).values
+
     features_list = []
 
     # tính góc (A(4):tai M(6): vai, B(12):hông)
@@ -103,7 +107,7 @@ def extract_features(keypoints_file_path, features_file_path1):
             (math.sqrt((C[0] - A[0])**2 + (C[1] - A[1])**2))
         features_list.append(
             (angle1, ratio, angle2, angle3, abs(angle2-angle3)))
-
+    print(features_list)
     with open(features_file_path1, 'w', newline='') as f:
         writer = csv.writer(f)
         writer.writerows(features_list)
@@ -136,12 +140,13 @@ def find_files(name, path):
 
 
 if __name__ == "__main__":
-    json_files_path = find_files(
+    json_path = find_files(
         "alphapose-results.json", os.path.join(
             current_directory, "Result2/256x192"))
-    print(json_files_path)
+    print(json_path)
 
-    for i in json_files_path:
+
+    for i in json_path:
         directory = os.path.dirname(i)
         keypoints_file_path = os.path.join(directory, "keypoints.csv")
         features_file_path = os.path.join(directory, "features.csv")
@@ -150,3 +155,25 @@ if __name__ == "__main__":
         valid_file_path = os.path.join(directory, "valid.csv")
         extract_keypoints(i, keypoints_file_path)
         extract_features(keypoints_file_path, features_file_path)
+
+    output_path = os.path.join(current_directory, "features.csv")
+    features_path = find_files(
+        "features.csv", os.path.join(
+            current_directory, "Result2/256x192"))
+
+    # for i in keypoints_path:
+    #     # directory = os.path.dirname(i)
+    #     # Create an empty output CSV file
+
+    with open(output_path, "w", newline="") as output_file:
+        writer = csv.writer(output_file)
+
+        # Loop over each CSV file and append its contents to the output CSV file
+        for file_path in features_path:
+            with open(file_path, "r") as input_file:
+                reader = csv.reader(input_file)
+
+
+                # Write the remaining rows to the output file
+                for row in reader:
+                    writer.writerow(row)
