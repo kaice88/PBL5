@@ -1,14 +1,17 @@
 
 import numpy as np
 import pandas as pd
+import pickle
 import math
 import os
-from sklearn.utils import shuffle
 from sklearn.multioutput import MultiOutputClassifier
-from sklearn.datasets import make_classification
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
+# Tree Visualisation
+from sklearn.tree import export_graphviz
+from IPython.display import Image
+import graphviz
 
 
 current_directory = os.getcwd()
@@ -91,25 +94,40 @@ for i in features_files_path:
 
 
 def multi_output(X_train, y_train, X, y):
-    forest = RandomForestClassifier(random_state=1)
+    forest = RandomForestClassifier(n_estimators=100, random_state=1)
     forest = MultiOutputClassifier(forest)
     forest.fit(X_train, y_train)
     y_pred = forest.predict(X)
-    # Tính độ chính xác
     accuracy = accuracy_score(y, y_pred)
-    accuracy1 = accuracy_score(y[:, 0], y_pred[:, 0])
-    accuracy2 = accuracy_score(y[:, 1], y_pred[:, 1])
-    accuracy3 = accuracy_score(y[:, 2], y_pred[:, 2])
+    accuracy_head = accuracy_score(y[:, 0], y_pred[:, 0])
+    accuracy_back = accuracy_score(y[:, 1], y_pred[:, 1])
+    accuracy_leg = accuracy_score(y[:, 2], y_pred[:, 2])
+    # print(y_pred)
     print("General: ", accuracy)
-    print("Head: ", accuracy1)
-    print("Back: ", accuracy2)
-    print("Leg: ", accuracy3)
+    print("Head: ", accuracy_head)
+    print("Back: ", accuracy_back)
+    print("Leg: ", accuracy_leg)
     print("-------------------------------------------")
+    with open('trained_forest.pkl', 'wb') as f:
+        pickle.dump(forest, f)
+    # Export the first three decision trees from the forest
+
+    # for i in range(3):
+    #     tr = forest.estimators_[i]
+    #     dot_data = export_graphviz(tr,
+    #                                feature_names=["A1", "R",
+    #                                               "A2", "A3", "A2-A3"],
+    #                                filled=True,
+    #                                max_depth=2,
+    #                                impurity=False,
+    #                                proportion=True)
+    #     graph = graphviz.Source(dot_data)
+    #     Image(graph)
 
 
-print("Train: ")
-multi_output(X_train, y_train, X_train, y_train)
-print("Valid: ")
-multi_output(X_train, y_train, X_valid, y_valid)
+# print("Train: ")
+# multi_output(X_train, y_train, X_train, y_train)
+# print("Valid: ")
+# multi_output(X_train, y_train, X_valid, y_valid)
 print("Test: ")
 multi_output(X_train, y_train, X_test, y_test)
