@@ -80,16 +80,16 @@ def extract_features(keypoints_list):
     features_list = []
 
     # tính góc (A(4):tai M(6): vai, B(12):hông)
-    keypoints_list = [keypoints_list]
     for k in keypoints_list:
-        A = [k[3*2], k[3*2+1]]
-        M = [k[5*2], k[5*2+1]]
-        B = [k[11*2], k[11*2+1]]
-        N = [k[13*2], k[13*2+1]]
-        C = [k[15*2], k[15*2+1]]
-        D = [k[12*2], k[12*2+1]]
-        O = [k[14*2], k[14*2+1]]
-        E = [k[16*2], k[16*2+1]]
+        k_new = k[1:]
+        A = [k_new[3*3], k_new[3*3+1]]
+        M = [k_new[5*3], k_new[5*3+1]]
+        B = [k_new[11*3], k_new[11*3+1]]
+        N = [k_new[13*3], k_new[13*3+1]]
+        C = [k_new[15*3], k_new[15*3+1]]
+        D = [k_new[12*3], k_new[12*3+1]]
+        O = [k_new[14*3], k_new[14*3+1]]
+        E = [k_new[16*3], k_new[16*3+1]]
 
         MA = [A[0]-M[0], A[1]-M[1]]
         MB = [B[0]-M[0], B[1]-M[1]]
@@ -114,7 +114,7 @@ def extract_features(keypoints_list):
         ratio = (math.sqrt((B[0] - M[0])**2 + (B[1] - M[1])**2)) / \
             (math.sqrt((C[0] - A[0])**2 + (C[1] - A[1])**2))
         features_list.append(
-            (angle1, ratio, angle2, angle3, abs(angle2-angle3)))
+            (k[0],angle1, ratio, angle2, angle3, abs(angle2-angle3)))
     return features_list
     # with open(features_file_path1, 'w', newline='') as f:
     #     writer = csv.writer(f)
