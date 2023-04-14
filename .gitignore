@@ -1,3 +1,5 @@
 AlphaPose/
 __pycache__/
 .idea/
+ObjectDetection/
+TestImage/
