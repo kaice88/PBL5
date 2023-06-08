@@ -15,7 +15,7 @@ def extract_keypoints(json_file_path):
 
 
 A = extract_keypoints(
-    "C:/Users/Lenovo/Documents/Zalo Received Files/Keypoint_Flipped/Keypoint_Flipped/alphapose-results.json")
+    "C:/Users/Lenovo/Downloads/Processed/valid/alphapose/alphapose-results.json")
 
 B = []
 C = []
@@ -23,7 +23,7 @@ for x in A:
     C.append(x[0])
 
 for y in C:
-    if C.count(y) > 1 and y[0] not in B:
+    if C.count(y) > 1 and y not in B:
         B.append(y)
 
 new_A = [x for x in A if x[0] not in B]
@@ -51,11 +51,9 @@ for i in range(len(new_A_kp)):
     s = " ".join(str(x) for x in new_arr)
     A_str.append(s)
 
-print(new_A_kp)
-print(len(A_str))
 
 for i in range(len(A_str)):
-    file_path = "C:/Users/Lenovo/Downloads/Test_Speech/New_/labels/" + \
+    file_path = "C:/Users/Lenovo/Downloads/Processed/valid/Labels/" + \
         new_A_name[i]
     new_filename = file_path.replace(".jpg", ".txt")
     with open(new_filename, "w") as file:
