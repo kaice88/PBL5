@@ -3,3 +3,15 @@ __pycache__/
 .idea/
 ObjectDetection/
 TestImage/
+weights/
+data/
+.ipynb_checkpoints/
+chi
+runs/
+back.png
+confusion_matrix.png
+debug_table.csv
+head.png
+leg.png
+preprocessed_image.jpg
+testing.ipynb
